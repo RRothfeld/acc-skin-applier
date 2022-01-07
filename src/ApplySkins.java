@@ -16,7 +16,8 @@ public class ApplySkins {
     static String endOfLineDelimiter = ",";
 
     public static void main(String[] args) throws IOException {
-        String content = Files.readString(Path.of(args.length > 0 ? args[0] : "ApplySkins.json"), StandardCharsets.UTF_16LE);
+        String content = Files.readString(Path.of(args.length > 0 ? args[0] : "acc-skin-applier.json"),
+                StandardCharsets.UTF_16LE);
         System.out.println(content);
 
         int start = content.indexOf(raceLabel) + raceLabel.length();
@@ -33,13 +34,13 @@ public class ApplySkins {
 
             // Replace logic: replace car model
             String curContent = content;
-            curContent.replaceFirst(modelLabel + modelNumber, modelLabel + carModel);
-            curContent.replace("\"skinTemplateKey\": .+,", "\"skinTemplateKey\": 100,");
+            curContent = curContent.replaceAll(modelLabel + modelNumber, modelLabel + carModel);
+            curContent = curContent.replaceAll("\"skinTemplateKey\": .+,", "\"skinTemplateKey\": 100,");
 
             if (carModel == auxLightException)
-                curContent.replace("\"auxLightKey\": .+,", "\"auxLightKey\": 0,");
+                curContent = curContent.replaceAll("\"auxLightKey\": .+,", "\"auxLightKey\": 0,");
             else
-                curContent.replace("\"auxLightKey\": .+,", "\"auxLightKey\": 1,");
+                curContent = curContent.replaceAll("\"auxLightKey\": .+,", "\"auxLightKey\": 1,");
 
             String date = java.time.LocalDate.now().toString().replace("-","").substring(2);
             FileWriter writer = new FileWriter(raceNumber + "-" + date + "-" + String.format("%06d", carModel) + ".json");
